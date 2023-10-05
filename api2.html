@@ -1,0 +1,87 @@
+<!-- API - To fetch Countries details -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My API</title>
+    <link rel="stylesheet" href="country.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ysabeau+Infant:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <h1>country world!!!</h1>
+    <main>
+        <label id="inpLab">Enter Country name: </label>
+        <input type="text" id="mainInp" class='Inp' placeholder="  Type here."><br>
+        <button onclick="first()" id="submitBtn">Submit</button>
+        <h3 id="data"></h3>
+    </main>
+    <footer>
+        <input type="text" id="footerInp" class='Inp' placeholder=" Enter country.">
+        <button onclick="second()" id="searchBtn">🔍</button>
+    </footer>
+
+    <script>
+        document.getElementById('footerInp').style.display = 'none'
+        document.getElementById('searchBtn').style.display = 'none'
+
+        document.getElementById('mainInp').addEventListener('keyup',convertToUpper)
+        document.getElementById('footerInp').addEventListener('keyup',convertToUpper2)
+        function convertToUpper(){
+            let x = document.getElementById('mainInp')
+            x.value = x.value.toUpperCase()
+        }
+        function convertToUpper2(){
+            y = document.getElementById('footerInp')
+            y.value = y.value.toUpperCase()
+
+        }
+
+        function first() {
+            let countryName = document.getElementById('mainInp').value
+            details(countryName)
+        }
+
+        function second() {
+            let countryName = document.getElementById('footerInp').value
+            details(countryName)
+        }
+
+        function details(countryName) {
+            let countryURL = `https://restcountries.com/v2/name/${countryName}`
+            let url_Data = fetch(countryURL)
+
+            url_Data.then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Something went wrong, Page is not responding`)
+                }
+                else {
+                    return response.json()
+                }
+            }).then((data) => {
+                for (i in data) {
+                    res = `Country Name: ${data[i].name}<br><img src='${data[i].flag}'><br> CallingCodes: ${data[i].callingCodes}<br> Capital: ${data[i].capital}<br> Region: ${data[i].region}<br> population: ${data[i].population}`
+                    document.getElementById('data').innerHTML = res
+                }
+            }).catch((err) => {
+                errMsg = `There is problem with fetching the API ${err}`
+                document.getElementById('data').innerHTML = errMsg
+                document.getElementById('data').style.color = 'red'
+            })
+
+            document.getElementById('inpLab').style.display = 'none'
+            document.getElementById('mainInp').style.display = 'none'
+            document.getElementById('submitBtn').style.display = 'none'
+            document.getElementById('footerInp').style.display = 'inline'
+            document.getElementById('searchBtn').style.display = 'inline'
+        }
+    </script>
+</body>
+
+</html>
